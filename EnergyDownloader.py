@@ -2,6 +2,7 @@ import sys
 import requests
 from datetime import datetime, timedelta
 import csv
+import os
 
 Type = sys.argv[1] if len(sys.argv) > 1 else print("No energy type specified")  # must be "gas" or "electricity"
 MAC = sys.argv[2] if len(sys.argv) > 1 else print("No IHD MAC address specified")
@@ -17,7 +18,7 @@ def add90days(ssd):
     return new_date
 
 
-data_file = open("C:\\Users\\ash26\Desktop\\" + Type + "EnergyData.csv", 'w', newline='')
+data_file = open(os.environ['USERPROFILE'] + "\Desktop\\" + Type + "EnergyData.csv", 'w', newline='')
 csv_writer = csv.writer(data_file)
 
 while section_date.date() < datetime.now().date():
