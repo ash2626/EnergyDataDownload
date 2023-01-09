@@ -17,10 +17,10 @@ count = 0
 cnx = 0
 
 try:
-    cnx = mysql.connector.connect(user='root', password='Sycam0re',
-                              host='192.168.1.72',
-                              port='3307',
-                              database='energy')
+    cnx = mysql.connector.connect(user='', password='',
+                              host='',
+                              port='',
+                              database='')
 
 except mysql.connector.Error as err:
   if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
