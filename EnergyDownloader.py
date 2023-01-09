@@ -14,25 +14,23 @@ section_date = datetime(2021, 10, 1)
 headers = {'Authorization': MAC}  # AUTH is my MAC code
 url = "https://consumer-api.data.n3rgy.com/" + str(Type) + "/consumption/1/"
 count = 0
-cnx = 0
 
-try:
-    cnx = mysql.connector.connect(user='', password='',
-                              host='',
-                              port='',
-                              database='')
+def createDBconnection():
+    try:
+        cnx = mysql.connector.connect(user='', password='',
+                                host='',
+                                port='',
+                                database='')
 
-except mysql.connector.Error as err:
-  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-    print("Something is wrong with your user name or password")
-  elif err.errno == errorcode.ER_BAD_DB_ERROR:
-    print("Database does not exist")
-  else:
-    print(err)
-else:
-  cnx.close()
-
-cur = cnx.cursor();
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
+    else:
+        return cnx
 
 def executeSQL(statement, cur):
   
@@ -42,17 +40,16 @@ def executeSQL(statement, cur):
   except mysql.connector.Error as err:
     print(err) 
 
-
 def add90days(ssd):
     new_date = ssd + timedelta(days=90)
     return new_date
 
+cnx = createDBconnection()
+cur = cnx.cursor()
 
-#data_file = open(os.environ['USERPROFILE'] + "\Desktop\\" + Type + "EnergyData.csv", 'w', newline='')
 executeSQL(f"CREATE DATABASE IF NOT EXISTS energy;",cur)
 executeSQL(f"CREATE TABLE IF NOT EXISTS gas (id INT auto_increment, date DATE), energy_usage FLOAT, primary key (id) );",cur)
 executeSQL(f"CREATE TABLE IF NOT EXISTS electricity (id INT auto_increment, date DATE), energy_usage FLOAT, primary key (id) );",cur)
-#csv_writer = csv.writer(data_file)
 
 while section_date.date() < datetime.now().date():
     query = '?start=' + section_date.strftime('%Y') + section_date.strftime('%m') + section_date.strftime('%d') + \
@@ -64,12 +61,6 @@ while section_date.date() < datetime.now().date():
     for x in r.json()['values']:
         #update energy db with each x
         executeSQL("INSERT INTO TABLE " + Type + " "+ x.values() )
-        
-        """ if count == 0:
-            header = x.keys()
-            csv_writer.writerow(header)
-            count += 1
-        csv_writer.writerow((x.values())) """
 
     section_date = add90days(section_date)
 
