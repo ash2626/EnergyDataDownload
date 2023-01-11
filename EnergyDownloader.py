@@ -30,14 +30,6 @@ def createDBconnection():
     else:
         return cnx
 
-def executeSQL(statement, cur):
-  
-  try:
-    cur.execute(f"{statement}")
-  
-  except mysql.connector.Error as err:
-    print(err) 
-
 def add90days(ssd):
     new_date = ssd + timedelta(days=90)
     return new_date
@@ -46,8 +38,8 @@ cnx = createDBconnection()
 cur = cnx.cursor()
 
 cur.execute(f"CREATE DATABASE IF NOT EXISTS energy;")
-cur.execute(f"CREATE TABLE IF NOT EXISTS gas (id INT auto_increment, timestamp TIMESTAMP, energy_usage FLOAT, primary key (id) );")
-cur.execute(f"CREATE TABLE IF NOT EXISTS electricity (id INT auto_increment, timestamp TIMESTAMP, energy_usage FLOAT, primary key (id) );")
+cur.execute(f"CREATE TABLE IF NOT EXISTS gas (timestamp TIMESTAMP, energy_usage FLOAT, primary key (timestamp) );")
+cur.execute(f"CREATE TABLE IF NOT EXISTS electricity (timestamp TIMESTAMP, energy_usage FLOAT, primary key (timestamp) );")
 
 while section_date.date() < datetime.now().date():
     query = '?start=' + section_date.strftime('%Y') + section_date.strftime('%m') + section_date.strftime('%d') + \
@@ -59,7 +51,7 @@ while section_date.date() < datetime.now().date():
 
     for x in r.json()['values']: 
         data=(x["timestamp"], x["value"])
-        cur.execute("""INSERT INTO """+Type+""" (timestamp, energy_usage) values (%s, %s);""",data)
+        cur.execute("""REPLACE INTO """+Type+""" (timestamp, energy_usage) values (%s, %s);""",data)
         cnx.commit()
 
     section_date = add90days(section_date)
