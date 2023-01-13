@@ -1,4 +1,4 @@
-# EnergyDataDownload
+# n3rgy Energy Data Download
 
 Download data from N3rgy and save to a MySQL database. This script requires a consumer account on https://data.n3rgy.com.
 
