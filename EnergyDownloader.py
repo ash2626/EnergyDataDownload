@@ -38,8 +38,7 @@ cnx = createDBconnection()
 cur = cnx.cursor()
 
 cur.execute(f"CREATE DATABASE IF NOT EXISTS energy;")
-cur.execute(f"CREATE TABLE IF NOT EXISTS gas (timestamp TIMESTAMP, energy_usage FLOAT, primary key (timestamp) );")
-cur.execute(f"CREATE TABLE IF NOT EXISTS electricity (timestamp TIMESTAMP, energy_usage FLOAT, primary key (timestamp) );")
+cur.execute(f"CREATE TABLE IF NOT EXISTS "+Type+" (timestamp TIMESTAMP, energy_usage FLOAT, primary key (timestamp) );")
 
 while section_date.date() < datetime.now().date():
     query = '?start=' + section_date.strftime('%Y') + section_date.strftime('%m') + section_date.strftime('%d') + \
@@ -57,3 +56,4 @@ while section_date.date() < datetime.now().date():
     section_date = add90days(section_date)
 
 cur.close()
+cnx.close()

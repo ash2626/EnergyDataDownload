@@ -8,7 +8,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["root", "Sycam0re", "192.168.1.72", "3307", "energy", "BC6E76FE0046B1F1", "gas"]
+            "args": ["root", "Sycam0re", "192.168.1.72", "3307", "energy", "BC6E76FE0046B1F1", "electricity"]
             
         }
     ]
